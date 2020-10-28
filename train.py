@@ -35,8 +35,14 @@ def clean_data(data):
     x_df["month"] = x_df.month.map(months)
     x_df["day_of_week"] = x_df.day_of_week.map(weekdays)
     x_df["poutcome"] = x_df.poutcome.apply(lambda s: 1 if s == "success" else 0)
+    x_df["y"] = x_df.y.apply(lambda s: 1 if s == "yes" else 0)
 
-    y_df = x_df.pop("y").apply(lambda s: 1 if s == "yes" else 0)
+    return x_df
+
+def get_labels_and_data(ds):
+    x_df = clean_data(ds)
+
+    y_df = x_df.pop("y")
 
     return x_df, y_df
 
@@ -56,7 +62,7 @@ def main():
 
     ds = TabularDatasetFactory.from_delimited_files(path=data_path)
 
-    x, y = clean_data(ds)
+    x, y = get_labels_and_data(ds)
 
     x_train, x_test, y_train, y_test = train_test_split(x,y)
 
